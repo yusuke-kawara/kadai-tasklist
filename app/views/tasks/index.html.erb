@@ -1,9 +1,29 @@
-<h1>タスク一覧</h1>
-
-<ul>
-  <% @tasks.each do |task| %>
-    <li><%= link_to task.id, task %> : <%= task.status %> &gt; <%= task.content %></li>
+<% if logged_in? %>
+<div class="row">
+  <aside class="col-sm-4">
+    <%= form_with(model: @task, local: true) do |f| %>
+    <% if @task.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+        <% @task.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
-</ul>
-
-<%= link_to '新規タスクの投稿', new_task_path %>
+    <div class="form-group">
+      <%=f.text_area :content, class: 'form-control',rows: 5 %>
+    </div>
+    <div class="form-group">
+    <%= f.label :status, 'ステータス' %>
+    <%= f.text_field :status %>
+    </div>  
+  
+    <%=f.submit 'Post',class: 'btn btn-primary btn-block' %>
+    <% end %>
+  </aside>
+  <div class="col-sm-8">
+    <%= render 'tasks/tasks',tasks: @tasks %>
+  </div>
+</div>
+<% end %>
